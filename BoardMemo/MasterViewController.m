@@ -21,12 +21,13 @@
 @synthesize customCell;
 @synthesize labelForToolBar;
 @synthesize infoButton;
+@synthesize AdMaker;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title =  NSLocalizedString(@"Board Memo", nil);
+        self.title = NSLocalizedString(@"Memos", nil);
         id delegate = [[UIApplication sharedApplication] delegate];
         self.managedObjectContext = [delegate managedObjectContext];
     }
@@ -39,6 +40,7 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -47,25 +49,23 @@
     
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     
-    /*
-    UIButton* button = [UIButton buttonWithType:UIButtonTypeInfoLight];
-	[button addTarget:self action:@selector(showSettingView) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    self.navigationItem.leftBarButtonItem = barButtonItem;
-    */
     [self.infoButton addTarget:self action:@selector(showSettingView) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showAddMemoView)];
     self.navigationItem.rightBarButtonItem = addButton;
     
     self.masterTableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.4];
     self.masterTableView.bounces = YES;
-    /*
-    CGRect viewRect = CGRectMake(0, 0, 100, 100);
-    UIView* headerView = [[UIView alloc] initWithFrame:viewRect];
-    self.masterTableView.tableHeaderView = headerView;
-     */
     
+    //[self setTitleOfNavigationBar];
+
+    //[self setAdMaker];
+    if ([self isFirstLaunch]) {
+        [self showStartGuideView];
+    }
+    //[self showStartGuideView];
 }
 
 - (void)viewDidUnload
@@ -79,9 +79,9 @@
 {
     [super viewWillAppear:animated];
      
-    [self setTitleOfNavigationBar];
     [self setAddMemoButton];
     self.labelForToolBar.text = [self titleOfToolBar];
+    //[AdMaker viewWillAppear];//広告のviewを表示します。
 
 }
 
@@ -93,6 +93,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    //[AdMaker viewWillDisappear];//広告のviewが非表示になったことを伝えます。
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -103,7 +104,7 @@
 - (void)setTitleOfNavigationBar
 {
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = NSLocalizedString(@"↑下にスワイプしてメモを表示", nil);
+    titleLabel.text = NSLocalizedString(@"↑Swipe down to show memos", nil);
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.shadowColor = [UIColor darkGrayColor];
@@ -116,34 +117,34 @@
 
 - (void)setAddMemoButton
 {
-    int countOfMemo = [[self.fetchedResultsController fetchedObjects]  count];
-    if (countOfMemo >= 10)
-    {
+    if (self.editing) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
-    else
-    {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
+    else{
+        int countOfMemo = [[self.fetchedResultsController fetchedObjects]  count];
+        if (countOfMemo >= 10){
+            self.navigationItem.rightBarButtonItem.enabled = NO;
+        }
+        else{
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+        }
     }
 }
 
 - (NSString *)titleOfToolBar
 {
     int maxCountOfMemo = 10;
-    int countOfMemo = [[self.fetchedResultsController fetchedObjects]  count];
+    int countOfMemo = [[self.fetchedResultsController fetchedObjects] count];
     
     int remainingNumberOfMemo = maxCountOfMemo - countOfMemo;
     
-    NSString *title = [NSString localizedStringWithFormat:@"あと%d個、メモを追加できます", remainingNumberOfMemo];//NSLocalizedString(@"あと%d個、メモを追加できます", nil);
-
-    //title = [preMessage stringByAppendingString:actionString];
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"You can add %d memos", nil), remainingNumberOfMemo];
         
     return title;
 }
 
 #pragma mark - TableView
 
-// Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [[self.fetchedResultsController sections] count];
@@ -159,13 +160,7 @@
 {
     
     static NSString *CellIdentifier = @"CustomCell";
-    /*
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-     */
+
     CustomCell *cell = (CustomCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {		
@@ -201,13 +196,14 @@
     
     NSManagedObject *managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NSString* text = [managedObject valueForKey:@"text"];
-    UIFont* font = [UIFont systemFontOfSize:13];//CustomCell.xibと合わせる  
+    UIFont* font = [UIFont boldSystemFontOfSize:13];//CustomCell.xibと合わせる  
     CGSize size = CGSizeMake(280, 1000);//(label.size.width, 1000)
     CGSize textSize = [text sizeWithFont:font constrainedToSize:size lineBreakMode:UILineBreakModeCharacterWrap];//CustomCell.xibと合わせる  
     
     float height;
     float minHeight = 44.0f;
     float maxHeight = 76;
+    float space = 12;
     if (textSize.height <= minHeight) {
         
         height = minHeight;
@@ -216,16 +212,15 @@
     else {
         if (textSize.height <= maxHeight) {
             
-            height = textSize.height;
+            height = textSize.height+space;
             
         }
         else{
             
-            height = maxHeight;
+            height = maxHeight+space;
             
         }
     }
-    //NSLog(@"heightForCell:%f",height);
     return height;
     
 }  
@@ -242,26 +237,12 @@
         NSError *error = nil;
         if (![context save:&error])
         {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-             */
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
-        //メモの変更を通知センターに反映
-        id appDelegate = [[UIApplication sharedApplication] delegate];
-        [appDelegate setMemoToNotificationCenter];
-
+    
         [self viewWillAppear:NO];//ToolBarと、追加ボタンを更新するため、Viewを再読み込み
     }   
-}
-
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // The table view should not be re-orderable.
-    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -272,6 +253,94 @@
     [self.navigationController pushViewController:controller animated:YES];
     
     [masterTableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark  Edit
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    return UITableViewCellEditingStyleDelete;
+    
+}
+
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    //削除した時に、追加可能になってしまう
+    //setAddMemoに統合する？？
+    [super setEditing:editing animated:animated];
+    [self.masterTableView setEditing:editing animated:YES];
+    [self setAddMemoButton];
+    
+    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
+    // Save the context.
+    NSError *error = nil;
+    if (![context save:&error])
+    {
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+
+    
+}
+
+- (BOOL)tableView:(UITableView*)tableView canMoveRowAtIndexPath:(NSIndexPath*)indexPath 
+{
+    return YES;
+}
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath 
+{
+    //http://stackoverflow.com/questions/1648223/how-can-i-maintain-display-order-in-uitableview-using-core-data
+    //セルを移動した時に影響を受けたセルの、displayOrderを変更（+1もしくは-1）
+    NSUInteger fromRow = fromIndexPath.row;
+    NSUInteger toRow = toIndexPath.row;
+    
+    Memo *movingMemo = [self.fetchedResultsController.fetchedObjects objectAtIndex:fromRow];  
+    movingMemo.displayOrder =  [[NSNumber alloc] initWithInteger:toRow];;
+    
+    NSInteger start,end;
+    int delta;
+    
+    if (fromRow == toRow) {//セルを移動させなかった場合
+        return;
+    }
+    else if (fromRow < toRow){//セルを下に移動させた場合
+        delta = -1;
+        start = fromRow + 1;
+        end = toRow;
+    }
+    else {//セルを上に移動させた場合
+        delta = 1;
+        start = toRow;
+        end = fromRow - 1;
+    }
+    NSLog(@"Change Displey Order from cellAtIndex:%i to cellAtIndex:%i", start, end);  
+    
+    for (NSUInteger i = start; i <= end; i++) {
+        Memo *aMemo = [self.fetchedResultsController.fetchedObjects objectAtIndex:i];  
+        NSLog(@"Displey Order changed from %i to %i", [aMemo.displayOrder intValue], [aMemo.displayOrder intValue]+delta); 
+        
+        int newdisplayOrderInt = [aMemo.displayOrder intValue] + delta;
+        aMemo.displayOrder =  [[NSNumber alloc] initWithInt:newdisplayOrderInt];
+        
+    }
+}
+
+- (void)refreshDisplayOrder 
+{      
+    //Memo.displayOrderに空白があった場合に、空白を埋める
+    //通知センターに変更を反映する前に、呼び出される    
+    NSLog(@"Refresh display order because of deleting of cell");
+    NSUInteger index = 0;
+    NSArray * fetchedObjects = [self.fetchedResultsController fetchedObjects];
+    
+    Memo * aMemo = nil;           
+    for (aMemo in fetchedObjects) 
+    {
+        aMemo.displayOrder = [NSNumber numberWithInt:index];
+        index++;
+    }
+    
 }
 
 #pragma mark - Add New Memo
@@ -287,7 +356,10 @@
     
     controller.memo = (Memo *)[NSEntityDescription insertNewObjectForEntityForName:@"Memo" inManagedObjectContext:addingContext];
     
-    controller.memo.timeStamp = [NSDate date];
+    int countOfMemo = [[self.fetchedResultsController fetchedObjects] count];
+    controller.memo.displayOrder = [[NSNumber alloc] initWithInt:countOfMemo];
+    NSLog(@"Display Order = %i",countOfMemo);
+    //controller.memo.timeStamp = [NSDate date];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [self presentModalViewController:navController animated:YES];
@@ -316,17 +388,11 @@
     [self dismissModalViewControllerAnimated:YES];
     
 }
-- (void)addControllerContextDidSave:(NSNotification*)saveNotification {
-	
+- (void)addControllerContextDidSave:(NSNotification*)saveNotification 
+{	
 	// Merging changes causes the fetched results controller to update its results
 	[self.managedObjectContext mergeChangesFromContextDidSaveNotification:saveNotification];
-    
-    id appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate setMemoToNotificationCenter];//この状態のManagedObjectContextには、まだ新規メモは反映されていない
-    
 }
-
-#pragma mark - SettingView
 
 #pragma mark - Fetched results controller
 
@@ -350,7 +416,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"displayOrder" ascending:YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -364,11 +430,6 @@
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error])
     {
-	    /*
-	     Replace this implementation with code to handle the error appropriately.
-         
-	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-	     */
 	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	    abort();
 	}
@@ -411,6 +472,7 @@
             
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self refreshDisplayOrder];
             break;
             
         case NSFetchedResultsChangeUpdate:
@@ -419,7 +481,7 @@
             
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -427,17 +489,12 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.masterTableView endUpdates];
+    //メモの変更を通知センターに反映
+    id appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate setMemoToNotificationCenter];
+
 }
 
-/*
- // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
- {
- // In the simplest, most efficient, case, reload the table view.
- [self.tableView reloadData];
- }
- */
 
 #pragma mark - SettingView
 
@@ -457,5 +514,66 @@
 {
     [self dismissModalViewControllerAnimated:YES];
 }
+
+#pragma mark AdMaker
+- (void)setAdMaker
+{
+    AdMaker = [[AdMakerView alloc] init];
+    [AdMaker setAdMakerDelegate:self];
+    [AdMaker setFrame:CGRectMake(0, 366, 320, 50)]; //(0, 366, 320, 50)
+    [AdMaker start];
+    
+}
+
+-(UIViewController*)currentViewControllerForAdMakerView:(AdMakerView*)view 
+{
+    return self;
+}
+
+-(NSArray*)adKeyForAdMakerView:(AdMakerView*)view 
+{
+    return [NSArray arrayWithObjects:kURLForAdMaker,kSiteIDForAdMaker,kSiteIDForAdMaker,nil]; 
+}
+
+//広告の取得に成功
+- (void)didLoadAdMakerView:(AdMakerView*)view 
+{
+    [self.view addSubview:AdMaker.view];
+}
+
+//広告の取得に失敗
+- (void) didFailedLoadAdMakerView:(AdMakerView*)view 
+{
+    
+}
+
+#pragma mark - ShowStartGuide
+
+- (void)showStartGuideView
+{
+    StartGuideViewController *controller = [[StartGuideViewController alloc] initWithNibName:@"StartGuideViewController" bundle:nil];
+    controller.isFirstLaunch = YES;
+    controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentModalViewController:navController animated:NO];
+    
+}
+
+#pragma mark - isFirstLaunch
+
+- (BOOL)isFirstLaunch
+{
+    BOOL isLaunchedPast = [[NSUserDefaults standardUserDefaults] boolForKey:@"isLaunchedPast"];
+    
+    if(isLaunchedPast) {
+        return NO;
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLaunchedPast"];
+        return YES;
+    }
+    
+}
+
 
 @end

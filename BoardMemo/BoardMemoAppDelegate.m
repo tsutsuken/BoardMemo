@@ -233,8 +233,8 @@
                                               inManagedObjectContext:context];
     [fetchRequest setEntity:entity];
     
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp"
-                                                                   ascending:YES];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"displayOrder"
+                                                                   ascending:NO];//MasterViewではYesにする。通知センターでの順番をそろえるため。
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     [fetchRequest setSortDescriptors:sortDescriptors];
     
@@ -250,5 +250,6 @@
     return memoArray;
 
 }
+
 
 @end

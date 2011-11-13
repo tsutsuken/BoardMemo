@@ -10,13 +10,12 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 #import "CopyrightViewController.h"
+#import "StartGuideViewController.h"
 
 #define kOurEmailAddress @"support@vovv.me"
-#define kEmailSubTitle @"Feedback for vow"
-#define kSupportURLForJapanese @"http://www.facebook.com/pages/vow-%E4%BB%8A%E6%97%A5%E3%82%84%E3%82%8B%E3%81%93%E3%81%A8/189566011092003?sk=wall"
-#define kSupportURLForEnglish @"http://www.facebook.com/pages/vow-To-Do-Today/212901032083791?sk=wall"
-#define kNotificationReloadSecondView @"ReloadSecondView"
-#define kTimeInterval @"TimeIntervalInt"
+#define kEmailSubTitle @"Feedback for BoardMemo"
+#define kSupportURLForJapanese @"http://www.facebook.com/pages/Board-Memo/286621484689683"
+#define kSupportURLForEnglish @"http://www.facebook.com/pages/Board-Memo/286621484689683"
 
 @protocol SettingViewControllerDelegate;
 @interface SettingViewController : UITableViewController<MFMailComposeViewControllerDelegate>{
@@ -30,7 +29,9 @@
 -(void)displayComposerSheet;
 -(void)launchMailAppOnDevice;
 -(BOOL)isJapanese;
+-(void)showAppSettingView;
 -(void)showCopyrightView;
+-(void)showStartGuideView;
 
 @end
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.10">
 	<data>
-		<int key="IBDocument.SystemTarget">1056</int>
-		<string key="IBDocument.SystemVersion">10J869</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1305</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<int key="IBDocument.SystemTarget">1280</int>
+		<string key="IBDocument.SystemVersion">11C74</string>
+		<string key="IBDocument.InterfaceBuilderVersion">1938</string>
+		<string key="IBDocument.AppKitVersion">1138.23</string>
+		<string key="IBDocument.HIToolboxVersion">567.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">300</string>
+			<string key="NS.object.0">933</string>
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -21,11 +21,8 @@
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-			<object class="NSArray" key="dict.sortedKeys" id="0">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
-			<reference key="dict.values" ref="0"/>
+			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
+			<integer value="1" key="NS.object.0"/>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -57,40 +54,22 @@
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<bool key="IBUIEditable">NO</bool>
-						<string type="base64-UTF8" key="IBUIText">LSBUYXBrdUxpYnJhcnkgKENhbGVuZGFyKSAgICAgICAgICAgICAgICAgCgpDcmVhdGVkIGJ5IERldmlu
-IFJvc3MKaHR0cHM6Ly9naXRodWIuY29tL2Rldmlucm9zcy90YXBrdWxpYnJhcnnigKgKTGljZW5zZWQg
-dW5kZXIgdGhlIEFwYWNoZSBMaWNlbnNlLCBWZXJzaW9uIDIuMCAodGhlICJMaWNlbnNlIik7CnlvdSBt
-YXkgbm90IHVzZSB0aGlzIGZpbGUgZXhjZXB0IGluIGNvbXBsaWFuY2Ugd2l0aCB0aGUgTGljZW5zZS4K
-WW91IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBMaWNlbnNlIGF0IGh0dHA6Ly93d3cuYXBhY2hlLm9y
-Zy9saWNlbnNlcy9MSUNFTlNFLTIuMOKAqAogVW5sZXNzIHJlcXVpcmVkIGJ5IGFwcGxpY2FibGUgbGF3
-IG9yIGFncmVlZCB0byBpbiB3cml0aW5nLCBzb2Z0d2FyZQpkaXN0cmlidXRlZCB1bmRlciB0aGUgTGlj
-ZW5zZSBpcyBkaXN0cmlidXRlZCBvbiBhbiAiQVMgSVMiIEJBU0lTLApXSVRIT1VUIFdBUlJBTlRJRVMg
-T1IgQ09ORElUSU9OUyBPRiBBTlkgS0lORCwgZWl0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZC4KU2VlIHRo
-ZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFu
-ZApsaW1pdGF0aW9ucyB1bmRlciB0aGUgTGljZW5zZS4K4oCoCgotIElOVEVSQUNUSVZFTUFOSUEgKFRh
-YkJhckljb25zKQoKQ29weXJpZ2h0IChjKSAyMDEwIEFwb3N0b2xvcyBQYXNjaGFsaWRpcyBpbnRlcmFj
-dGl2ZW1hbmlhCiAgQWxsIFJpZ2h0cyBSZXNlcnZlZC4KICBodHRwOi8vd3d3LmludGVyYWN0aXZlbWFu
-aWEuY29tCuKAqE5PVElDRTogaW50ZXJhY3RpdmVtYW5pYSBwZXJtaXRzIHlvdSB0byB1c2UsIG1vZGlm
-eSwgYW5kIGRpc3RyaWJ1dGUgdGhpcyBmaWxlCiAgaW4gYWNjb3JkYW5jZSB3aXRoIHRoZSB0ZXJtcyBv
-ZiB0aGUgbGljZW5zZSBhZ3JlZW1lbnQgbWVudGlvbmVkIGluIHRoZSBzZWN0aW9uICJDT1BZUklHSFQg
-Tk9USUNFIiBiZWxvdy4KQW55b25lIGRvd25sb2FkaW5nIGFuZC9vciB1c2luZyBEZWZhdWx0SWNvbiBh
-Z3JlZXMgdG8gdGhlIGZvbGxvd2luZyBsaWNlbnNlOgpUaGUgbGljZW5zZSB1bmRlciB3aGljaCBEZWZh
-dWx0SWNvbiBpcyByZWxlYXNlZCBpcyBsaWNlbnNlZCB1bmRlciBhIENyZWF0aXZlIENvbW1vbnMgQXR0
-cmlidXRpb24tTm8gRGVyaXZhdGl2ZSBXb3JrcyAzLjAuIE1vcmUgY2FuIGJlIGZvdW5kIGF0IGh0dHA6
-Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5kLzMuMC8gLkluIHNob3J0IHRlcm1zIHRo
-aXMgbWVhbnMKVGhpcyBsaWNlbnNlIGFsbG93cyBmb3IgcmVkaXN0cmlidXRpb24sIGNvbW1lcmNpYWwg
-YW5kIG5vbi1jb21tZXJjaWFsLCBhcyBsb25nIGFzIGl0IGlzIHBhc3NlZCBhbG9uZyB1bmNoYW5nZWQg
-YW5kIGluIHdob2xlLCB3aXRoIGNyZWRpdCB0byBpbnRlcmFjdGl2ZW1hbmlhKHdpdGggbGluayBodHRw
-Oi8vd3d3LmludGVyYWN0aXZlbWFuaWEuY29tKQoKCi0gdm93IC0gVG8gZG8gVG9kYXkKCkRlc2lnbmVk
-IGJ5IEtlaXN1a2UgSG9yaXVjaGkKUHJvZ3JhbWVkIGJ5IEtlbiBUc3V0c3VtaQ</string>
+						<string type="base64-UTF8" key="IBUIText">Qm9hcmRNZW1vCgpEZXNpZ25lZCBieSBLZWlzdWtlIEhvcml1Y2hpClByb2dyYW1lZCBieSBUYWt1bWEg
+WWFtYXpha2kKUHJvZ3JhbWVkIGJ5IEtlbiBUc3V0c3VtaQ</string>
+						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
+							<int key="IBUIAutocapitalizationType">2</int>
+							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						</object>
+						<object class="IBUIFontDescription" key="IBUIFontDescription">
+							<string key="name">Helvetica</string>
+							<string key="family">Helvetica</string>
+							<int key="traits">0</int>
+							<double key="pointSize">17</double>
+						</object>
 						<object class="NSFont" key="IBUIFont">
 							<string key="NSName">Helvetica</string>
 							<double key="NSSize">17</double>
 							<int key="NSfFlags">16</int>
-						</object>
-						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
-							<int key="IBUIAutocapitalizationType">2</int>
-							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
 					</object>
 				</object>
@@ -126,7 +105,9 @@ IGJ5IEtlaXN1a2UgSG9yaXVjaGkKUHJvZ3JhbWVkIGJ5IEtlbiBUc3V0c3VtaQ</string>
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="IBObjectRecord">
 						<int key="objectID">0</int>
-						<reference key="object" ref="0"/>
+						<object class="NSArray" key="object" id="0">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
 					</object>
@@ -162,16 +143,18 @@ IGJ5IEtlaXN1a2UgSG9yaXVjaGkKUHJvZ3JhbWVkIGJ5IEtlbiBUc3V0c3VtaQ</string>
 				<object class="NSArray" key="dict.sortedKeys">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>-1.CustomClassName</string>
+					<string>-1.IBPluginDependency</string>
 					<string>-2.CustomClassName</string>
-					<string>1.IBEditorWindowLastContentRect</string>
+					<string>-2.IBPluginDependency</string>
 					<string>1.IBPluginDependency</string>
 					<string>4.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>CopyrightViewController</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>UIResponder</string>
-					<string>{{556, 412}, {320, 480}}</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				</object>
@@ -211,6 +194,6 @@ IGJ5IEtlaXN1a2UgSG9yaXVjaGkKUHJvZ3JhbWVkIGJ5IEtlbiBUc3V0c3VtaQ</string>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<string key="IBCocoaTouchPluginVersion">300</string>
+		<string key="IBCocoaTouchPluginVersion">933</string>
 	</data>
 </archive>

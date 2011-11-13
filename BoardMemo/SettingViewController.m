@@ -38,9 +38,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"Informaton", nil);
+    self.title = NSLocalizedString(@"Information", nil);
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
-                                                                                            target:self action:@selector(closeSettingView:)] ;
+                                                                                            target:self action:@selector(closeSettingView:)];
     
 }
 
@@ -79,15 +79,15 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 4;
 }
-
 /*
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return NSLocalizedString(@"Informaton", nil);
+    return NSLocalizedString(@"Information", nil);
 }
 */
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -97,17 +97,21 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-    
     if (indexPath.row == 0) {
-        cell.textLabel.text = NSLocalizedString(@"Support Forum", nil);
+        cell.textLabel.text = NSLocalizedString(@"Set number of notes at Notification Center", nil);
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     else if(indexPath.row == 1){
         cell.textLabel.text = NSLocalizedString(@"Email Us", nil);
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     else if(indexPath.row == 2){
         cell.textLabel.text = NSLocalizedString(@"Legal", nil);
     }
-
+    else if(indexPath.row == 3){
+        cell.textLabel.text = NSLocalizedString(@"Start Guide", nil);
+    }
+    
     return cell;
     
 }
@@ -117,13 +121,18 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        [self showSupportSite];
+        [self showAppSettingView];
     }
     else if(indexPath.row == 1){
         [self setEmail];
-    }else if(indexPath.row == 2){
+    }
+    else if(indexPath.row == 2){
         [self showCopyrightView];
     }
+    else if(indexPath.row == 3){
+        [self showStartGuideView];
+    }
+
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -136,6 +145,11 @@
 }
 
 #pragma mark - Support
+
+-(void)showAppSettingView
+{ 
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=NOTIFICATIONS_ID&path=BoardMemo"]];
+}
 
 -(void)showSupportSite
 {
@@ -150,6 +164,13 @@
 -(void)showCopyrightView
 {
     CopyrightViewController *controller = [[CopyrightViewController alloc] initWithNibName:@"CopyrightViewController" bundle:nil];
+    [self.navigationController pushViewController:controller animated:YES];
+    
+}
+
+-(void)showStartGuideView
+{
+    StartGuideViewController *controller = [[StartGuideViewController alloc] initWithNibName:@"StartGuideViewController" bundle:nil];
     [self.navigationController pushViewController:controller animated:YES];
     
 }
@@ -199,8 +220,8 @@
 	[picker setToRecipients:toRecipients];
 	
     /*
-	NSString *emailBody = @"It is raining in sunny California!";
-	[picker setMessageBody:emailBody isHTML:NO];
+     NSString *emailBody = @"It is raining in sunny California!";
+     [picker setMessageBody:emailBody isHTML:NO];
      */
 	
 	[self presentModalViewController:picker animated:YES];

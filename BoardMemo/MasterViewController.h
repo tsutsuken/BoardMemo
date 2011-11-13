@@ -12,12 +12,17 @@
 #import "AddMemoViewController.h"
 #import "Memo.h"
 #import "CustomCell.h"
-#import "WidgetController.h"
 #import "SettingViewController.h"
+#import "AdMakerView.h"
+#import "StartGuideViewController.h"
+
+#define kSiteIDForAdMaker @"1644"
+#define kZoneIDForAdMaker @"4158"
+#define kURLForAdMaker @"http://images.ad-maker.info/apps/fi3t9wof983z.html"
 
 @class Memo;
 
-@interface MasterViewController : UIViewController <NSFetchedResultsControllerDelegate,UITableViewDelegate, UITableViewDataSource,AddMemoViewControllerDelegate,SettingViewControllerDelegate>
+@interface MasterViewController : UIViewController <NSFetchedResultsControllerDelegate,UITableViewDelegate, UITableViewDataSource,AddMemoViewControllerDelegate,SettingViewControllerDelegate,UIAlertViewDelegate>
 {
     IBOutlet UITableView *masterTableView;
     IBOutlet UILabel *labelForToolBar;
@@ -31,9 +36,14 @@
 @property (nonatomic, assign) IBOutlet CustomCell *customCell;
 @property (nonatomic, retain) IBOutlet UILabel *labelForToolBar;
 @property (nonatomic, retain) IBOutlet UIButton *infoButton;
+@property (nonatomic, retain) AdMakerView *AdMaker;
 
 - (void)setTitleOfNavigationBar;
 - (void)setAddMemoButton;
 - (NSString *)titleOfToolBar;
+- (void)setAdMaker;
+- (void)showStartGuideView;
+- (BOOL)isFirstLaunch;
+- (void)refreshDisplayOrder;
 
 @end
