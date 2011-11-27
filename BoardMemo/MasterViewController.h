@@ -38,7 +38,6 @@
 @property (nonatomic, retain) IBOutlet UIButton *infoButton;
 @property (nonatomic, retain) AdMakerView *AdMaker;
 
-- (void)setTitleOfNavigationBar;
 - (void)setAddMemoButton;
 - (NSString *)titleOfToolBar;
 - (void)setAdMaker;

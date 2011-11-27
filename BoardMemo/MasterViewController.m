@@ -27,7 +27,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Memos", nil);
+        self.title = NSLocalizedString(@"Memo List", nil);
         id delegate = [[UIApplication sharedApplication] delegate];
         self.managedObjectContext = [delegate managedObjectContext];
     }
@@ -58,8 +58,6 @@
     
     self.masterTableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.4];
     self.masterTableView.bounces = YES;
-    
-    //[self setTitleOfNavigationBar];
 
     //[self setAdMaker];
     if ([self isFirstLaunch]) {
@@ -101,20 +99,6 @@
 	[super viewDidDisappear:animated];
 }
 
-- (void)setTitleOfNavigationBar
-{
-    UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = NSLocalizedString(@"↑Swipe down to show memos", nil);
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.shadowColor = [UIColor darkGrayColor];
-    titleLabel.shadowOffset = CGSizeMake(0, -1);
-    titleLabel.font = [UIFont boldSystemFontOfSize:15];
-    [titleLabel sizeToFit];
-    self.navigationItem.titleView = titleLabel;
-    
-}
-
 - (void)setAddMemoButton
 {
     if (self.editing) {
@@ -138,7 +122,7 @@
     
     int remainingNumberOfMemo = maxCountOfMemo - countOfMemo;
     
-    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"You can add %d memos", nil), remainingNumberOfMemo];
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"You can add %d more memos", nil), remainingNumberOfMemo];
         
     return title;
 }

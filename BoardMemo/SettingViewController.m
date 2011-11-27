@@ -98,7 +98,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     if (indexPath.row == 0) {
-        cell.textLabel.text = NSLocalizedString(@"Set number of notes at Notification Center", nil);
+        cell.textLabel.text = NSLocalizedString(@"Notification Center Settings", nil);
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
     else if(indexPath.row == 1){

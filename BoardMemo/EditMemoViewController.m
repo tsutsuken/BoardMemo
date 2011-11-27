@@ -149,8 +149,8 @@
 
 - (void)showConfirmAlert
 {
-    NSString *message = NSLocalizedString(@"Really discard changes?",nil);
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Discard changes?", nil) message:message
+    NSString *message = NSLocalizedString(@"Really delete changes?",nil);
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete changes", nil) message:message
                                                    delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Yes", nil), nil];
 	[alert show];	
 }

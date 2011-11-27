@@ -74,7 +74,7 @@ const int kNumberOfImages = 3;
 	for (i = 1; i <= kNumberOfImages; i++)
 	{
 		//NSString *imageName = [NSString stringWithFormat:@"ImageForStartGuide_%d.png", i];
-        NSString *imageName = [NSString stringWithFormat:NSLocalizedString(@"ImageForStartGuide_en_%d.png", nil), i];
+        NSString *imageName = [NSString stringWithFormat:NSLocalizedString(@"ImageForStartGuide_en_%d.png", nil), i];//画像名を翻訳する
 		UIImage *image = [UIImage imageNamed:imageName];
 		UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
 		
@@ -132,8 +132,8 @@ const int kNumberOfImages = 3;
  */
 - (void)showAppSettingAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Setting of Notification Center", nil) 
-                                                    message:NSLocalizedString(@"Do you change the number of notes displayed on Notification Center?\n※Default is 5", nil)
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Notification Center Settings", nil) 
+                                                    message:NSLocalizedString(@"Do you want to change the number of items that appear in Notification Center?\n*The default setting is set to 5 entries.", nil)
                                                    delegate:self 
                                           cancelButtonTitle:NSLocalizedString(@"Later", nil) 
                                           otherButtonTitles:NSLocalizedString(@"Change now", nil), nil];
