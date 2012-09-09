@@ -17,7 +17,7 @@
 }
 
 @property (nonatomic, retain) UIScrollView *myScrollView;
-@property (nonatomic, retain) UIPageControl *myPageControl; 
+@property (nonatomic, retain) UIPageControl *myPageControl;
 @property (nonatomic, retain) UIBarButtonItem *nextButton;
 @property (nonatomic, assign) BOOL isFirstLaunch;
 

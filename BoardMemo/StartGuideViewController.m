@@ -17,23 +17,6 @@
 
 const int kNumberOfImages = 3;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -49,7 +32,7 @@ const int kNumberOfImages = 3;
 
 - (void)setDoneButton
 {
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(showAppSettingAlert)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeView)];
     self.navigationItem.rightBarButtonItem = doneButton;
 }
 
@@ -118,40 +101,21 @@ const int kNumberOfImages = 3;
     [myScrollView scrollRectToVisible:frame animated:YES];  
     
 }
-/*
- - (void)showAppSettingAlert
- {
- UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"通知センターの設定", nil) 
- message:NSLocalizedString(@"通知センターに表示するメモの数を変更しますか？\n※初期設定では５件です。", nil)
- delegate:self 
- cancelButtonTitle:NSLocalizedString(@"後で変更", nil) 
- otherButtonTitles:NSLocalizedString(@"今すぐ変更", nil), nil];
- 
- [alert show];
- }
- */
+
 - (void)showAppSettingAlert
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Notification Center Settings", nil) 
                                                     message:NSLocalizedString(@"Do you want to change the number of items that appear in Notification Center?\n*The default setting is set to 5 entries.", nil)
                                                    delegate:self 
-                                          cancelButtonTitle:NSLocalizedString(@"Later", nil) 
-                                          otherButtonTitles:NSLocalizedString(@"Change now", nil), nil];
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
     
     [alert show];
 }
 
 -(void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {//Cancel
-        
-    }
-    else{//Yes
-        [self showAppSettingView];
-    }
-    
     [self closeView];
-    
 }
 
 - (void)showAppSettingView

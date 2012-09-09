@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
+#import "AAMFeedbackViewController.h"
 #import <MessageUI/MFMailComposeViewController.h>
 #import "CopyrightViewController.h"
 #import "StartGuideViewController.h"
+#import "EditAlertViewController.h"
 
+#define kSupportEMailAddress @"support@ken22.me"
 #define kOurEmailAddress @"support@vovv.me"
 #define kEmailSubTitle @"Feedback for BoardMemo"
 #define kSupportURLForJapanese @"http://www.facebook.com/pages/Board-Memo/286621484689683"
@@ -25,11 +28,7 @@
 @property (nonatomic, retain) id <SettingViewControllerDelegate> delegate;
 
 -(void)showSupportSite;
--(void)setEmail;
--(void)displayComposerSheet;
--(void)launchMailAppOnDevice;
 -(BOOL)isJapanese;
--(void)showAppSettingView;
 -(void)showCopyrightView;
 -(void)showStartGuideView;
 

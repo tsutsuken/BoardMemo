@@ -116,8 +116,10 @@
 {
     memo.text = textViewForMemo.text;
     
+#warning sendmemo
     id appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate setMemoToNotificationCenter];
+    
     
     NSLog(@"textViewから挿入されたメモ:%@",textViewForMemo.text);
     

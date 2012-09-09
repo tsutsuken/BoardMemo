@@ -23,7 +23,8 @@
     UIApplication *app = [UIApplication sharedApplication];
     app.statusBarStyle = UIStatusBarStyleBlackTranslucent;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
+    
+    [Appirater appLaunched:YES];
 
     MasterViewController *controller = [[MasterViewController alloc] initWithNibName:@"MasterViewController" bundle:nil];
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
@@ -32,38 +33,40 @@
     return YES;
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    /*
-     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     */
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
-}
-
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-     */
+    //http://cdn-ak.f.st-hatena.com/images/fotolife/g/glass-_-onion/20100702/20100702221856.png
+    //通常起動時のみ
+    NSLog(@"%s",__FUNCTION__);
+    [Appirater appEnteredForeground:YES];
+    
+    [self cancelAlert];
+    [self setMemoToNotificationCenter];
 }
-
+/*
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
+    
+    //通常起動＆通知センターからの復帰時に呼ばれる
+    NSLog(@"%s",__FUNCTION__);
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    //通常終了＆通知センター表示時にも呼ばれる
+    NSLog(@"%s",__FUNCTION__);
+}
+*/
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    //通常終了時のみ
+    NSLog(@"%s",__FUNCTION__);
+    [self setAlertIfNeeded];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    NSLog(@"%s",__FUNCTION__);
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
 }
@@ -201,27 +204,22 @@
         NSString *message = [[memoArray objectAtIndex:i] valueForKey:@"text"];
         
         localNotif.alertBody = message;
-        
         localNotif.hasAction = NO;
-        
         localNotif.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
-        
         localNotif.timeZone = [NSTimeZone defaultTimeZone];
-
         [app scheduleLocalNotification:localNotif];
-
+        //[app presentLocalNotificationNow:localNotif];
     }
     
     app.applicationIconBadgeNumber = [memoArray count];
     NSLog(@"BadgeNumber = %i",app.applicationIconBadgeNumber);
-
 }
+
 - (void)deleteMemoFromNotificationCenter
 {
     UIApplication *app = [UIApplication sharedApplication];
     app.applicationIconBadgeNumber = 0;
     NSLog(@"BadgeNumber = 0");
-    
 }
 
 - (NSMutableArray *)memoArray
@@ -248,8 +246,105 @@
     NSMutableArray *memoArray = [fetchedObjects mutableCopy];
 
     return memoArray;
-
 }
 
+#pragma mark - Alert
+
+- (void)setAlertIfNeeded
+{
+    NSLog(@"%s",__FUNCTION__);
+    
+    if ([self shouldSetAlert])
+    {
+        [self setAlert];
+    }
+}
+
+- (void)cancelAlert
+{
+    NSLog(@"%s",__FUNCTION__);
+    
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+}
+
+- (BOOL)shouldSetAlert
+{
+    NSLog(@"%s",__FUNCTION__);
+    
+    //アラームがオンになっているか？
+    
+    NSDate *alertTime = [[NSUserDefaults standardUserDefaults] objectForKey:kAlertTime];
+    
+    if (!alertTime)
+    {
+        NSLog(@"NO:Alert is Off");
+        return NO;
+    }
+    else
+    {
+        NSLog(@"YES");
+        return YES;
+    }
+}
+
+- (void)setAlert
+{
+    NSLog(@"%s",__FUNCTION__);
+    
+    NSMutableArray *memoArray = [self memoArray];
+    NSDate *baseOfAlertDate = [self baseOfAlertDate];
+    NSTimeInterval aDay = 60*60*24;
+    int repeatTimesOfAlert = 5;
+    
+    //下記を、指定した間隔で繰り返す
+    
+    for (int i = 0; i < repeatTimesOfAlert; i++)
+    {
+        for (int j = 0; j< [memoArray count]; j++) 
+        {
+            
+            UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+            if (localNotif == nil)
+                return;
+            
+            NSString *message = [[memoArray objectAtIndex:j] valueForKey:@"text"];
+            localNotif.alertBody = message;
+            localNotif.soundName = UILocalNotificationDefaultSoundName;
+            localNotif.hasAction = NO;
+            localNotif.timeZone = [NSTimeZone defaultTimeZone];
+            localNotif.fireDate = [NSDate dateWithTimeInterval:(aDay*i) sinceDate:baseOfAlertDate];
+            //localNotif.fireDate = [NSDate dateWithTimeIntervalSinceNow:5];
+            NSLog(@"FireDate_%i_%i:%@",i,j,[localNotif.fireDate description]);
+            [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
+        }
+    }
+    NSLog(@"ScheduledAlert:%i",[[[UIApplication sharedApplication] scheduledLocalNotifications] count]);
+}
+
+- (NSDate *)baseOfAlertDate
+{
+    NSDate *baseOfAlertDate;
+    
+    NSDate *alertTime = [[NSUserDefaults standardUserDefaults] objectForKey:kAlertTime];
+    NSDate *currentDate = [NSDate date];
+    
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSUInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit;
+    NSDateComponents *dateComp = [cal components:unitFlags fromDate:currentDate];
+    
+    [dateComp setHour:[alertTime hour]];
+    [dateComp setMinute:[alertTime minute]];
+    baseOfAlertDate = [cal dateFromComponents:dateComp];
+    
+    if ([baseOfAlertDate timeIntervalSinceDate:currentDate] < 0)//アラームの時間が過ぎていた場合
+    {
+        [dateComp setDay:[dateComp day] + 1];
+        baseOfAlertDate = [cal dateFromComponents:dateComp];
+    }
+    
+    NSLog(@"baseOfAlertDate:%@",[baseOfAlertDate description]);
+    
+    return baseOfAlertDate;
+}
 
 @end

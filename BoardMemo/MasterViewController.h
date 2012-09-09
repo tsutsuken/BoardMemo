@@ -13,7 +13,6 @@
 #import "Memo.h"
 #import "CustomCell.h"
 #import "SettingViewController.h"
-#import "AdMakerView.h"
 #import "StartGuideViewController.h"
 
 #define kSiteIDForAdMaker @"1644"
@@ -36,11 +35,9 @@
 @property (nonatomic, assign) IBOutlet CustomCell *customCell;
 @property (nonatomic, retain) IBOutlet UILabel *labelForToolBar;
 @property (nonatomic, retain) IBOutlet UIButton *infoButton;
-@property (nonatomic, retain) AdMakerView *AdMaker;
 
 - (void)setAddMemoButton;
 - (NSString *)titleOfToolBar;
-- (void)setAdMaker;
 - (void)showStartGuideView;
 - (BOOL)isFirstLaunch;
 - (void)refreshDisplayOrder;

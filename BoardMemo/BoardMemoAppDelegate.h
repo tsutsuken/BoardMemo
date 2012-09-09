@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Appirater.h"
 #import "Memo.h"
 
 #define kObjectIdForNotification @"objectId"

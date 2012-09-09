@@ -41,7 +41,6 @@
     self.title = NSLocalizedString(@"Information", nil);
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
                                                                                             target:self action:@selector(closeSettingView:)];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -74,19 +73,36 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    if (section == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 1;
+    }
 }
-/*
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
 {
-    return NSLocalizedString(@"Information", nil);
+    NSString *titleForHeader;
+    
+    if (section == 0)
+    {
+        titleForHeader = NSLocalizedString(@"SettingView_SectionHeader_Setting", nil);
+    }
+    else
+    {
+        titleForHeader = NSLocalizedString(@"SettingView_SectionHeader_Support", nil);
+    }
+    
+    return titleForHeader;
 }
-*/
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -97,22 +113,17 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-    if (indexPath.row == 0) {
-        cell.textLabel.text = NSLocalizedString(@"Notification Center Settings", nil);
-        cell.accessoryType = UITableViewCellAccessoryNone;
+    
+    if (indexPath.section == 0)
+    {
+        cell.textLabel.text = NSLocalizedString(@"SettingView_Cell_Alert", nil);
     }
-    else if(indexPath.row == 1){
+    else
+    {
         cell.textLabel.text = NSLocalizedString(@"Email Us", nil);
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    else if(indexPath.row == 2){
-        cell.textLabel.text = NSLocalizedString(@"Legal", nil);
-    }
-    else if(indexPath.row == 3){
-        cell.textLabel.text = NSLocalizedString(@"Start Guide", nil);
     }
     
-    return cell;
+       return cell;
     
 }
 
@@ -120,21 +131,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
-        [self showAppSettingView];
+    if (indexPath.section == 0)
+    {
+        [self showEditAlertView];
     }
-    else if(indexPath.row == 1){
-        [self setEmail];
+    else
+    {
+        [self showFeedbackView];
     }
-    else if(indexPath.row == 2){
-        [self showCopyrightView];
-    }
-    else if(indexPath.row == 3){
-        [self showStartGuideView];
-    }
-
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - CloseSettingView
@@ -146,11 +150,6 @@
 
 #pragma mark - Support
 
--(void)showAppSettingView
-{ 
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=NOTIFICATIONS_ID&path=BoardMemo"]];
-}
-
 -(void)showSupportSite
 {
     if ([self isJapanese]) {
@@ -159,6 +158,13 @@
     else{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kSupportURLForEnglish]];
     }
+}
+
+-(void)showEditAlertView
+{
+    EditAlertViewController *controller = [[EditAlertViewController alloc] initWithNibName:@"EditAlertViewController" bundle:nil];
+    [self.navigationController pushViewController:controller animated:YES];
+    
 }
 
 -(void)showCopyrightView
@@ -175,93 +181,14 @@
     
 }
 
-
-#pragma mark - Mail
-
--(void)setEmail
+- (void)showFeedbackView
 {
-	// This sample can run on devices running iPhone OS 2.0 or later  
-	// The MFMailComposeViewController class is only available in iPhone OS 3.0 or later. 
-	// So, we must verify the existence of the above class and provide a workaround for devices running 
-	// earlier versions of the iPhone OS. 
-	// We display an email composition interface if MFMailComposeViewController exists and the device can send emails.
-	// We launch the Mail application on the device, otherwise.
-	
-	Class mailClass = (NSClassFromString(@"MFMailComposeViewController"));
-	if (mailClass != nil)
-	{
-		// We must always check whether the current device is configured for sending emails
-		if ([mailClass canSendMail])
-		{
-			[self displayComposerSheet];
-		}
-		else
-		{
-			[self launchMailAppOnDevice];
-		}
-	}
-	else
-	{
-		[self launchMailAppOnDevice];
-	}
-}
-
-// Displays an email composition interface inside the application. Populates all the Mail fields. 
--(void)displayComposerSheet 
-{
-	MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
-	picker.mailComposeDelegate = self;
-	
-	[picker setSubject:kEmailSubTitle];
-	
-    
-	// Set up recipients
-	NSArray *toRecipients = [NSArray arrayWithObject:kOurEmailAddress]; 
-	[picker setToRecipients:toRecipients];
-	
-    /*
-     NSString *emailBody = @"It is raining in sunny California!";
-     [picker setMessageBody:emailBody isHTML:NO];
-     */
-	
-	[self presentModalViewController:picker animated:YES];
-    
-}
-
-
-// Dismisses the email composition interface when users tap Cancel or Send. Proceeds to update the message field with the result of the operation.
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
-{	
-	// Notifies users about errors associated with the interface
-	switch (result)
-	{
-		case MFMailComposeResultCancelled:
-			//message.text = @"Result: canceled";
-			break;
-		case MFMailComposeResultSaved:
-			//message.text = @"Result: saved";
-			break;
-		case MFMailComposeResultSent:
-			//message.text = @"Result: sent";
-			break;
-		case MFMailComposeResultFailed:
-			//message.text = @"Result: failed";
-			break;
-		default:
-			//message.text = @"Result: not sent";
-			break;
-	}
-	[self dismissModalViewControllerAnimated:YES];
-}
-
-// Launches the Mail application on the device.
--(void)launchMailAppOnDevice
-{
-	//NSString *recipients = @"mailto:first@example.com?cc=second@example.com,third@example.com&subject=Hello from California!";
-    NSString *email = [NSString stringWithFormat:@"mailto:%@?&subject=%@",kOurEmailAddress,kEmailSubTitle];
-	email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
+    AAMFeedbackViewController *vc = [[AAMFeedbackViewController alloc]init];
+    vc.toRecipients = [NSArray arrayWithObject:kSupportEMailAddress];
+    vc.ccRecipients = nil;
+    vc.bccRecipients = nil;
+    UINavigationController *nvc = [[UINavigationController alloc]initWithRootViewController:vc];
+    [self presentModalViewController:nvc animated:YES];
 }
 
 -(BOOL)isJapanese

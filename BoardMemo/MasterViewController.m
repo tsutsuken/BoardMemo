@@ -21,7 +21,6 @@
 @synthesize customCell;
 @synthesize labelForToolBar;
 @synthesize infoButton;
-@synthesize AdMaker;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,18 +58,17 @@
     self.masterTableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.4];
     self.masterTableView.bounces = YES;
 
-    //[self setAdMaker];
+#warning test
+    /*
     if ([self isFirstLaunch]) {
         [self showStartGuideView];
     }
-    //[self showStartGuideView];
+     */
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -79,8 +77,6 @@
      
     [self setAddMemoButton];
     self.labelForToolBar.text = [self titleOfToolBar];
-    //[AdMaker viewWillAppear];//広告のviewを表示します。
-
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -91,7 +87,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-    //[AdMaker viewWillDisappear];//広告のviewが非表示になったことを伝えます。
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -247,7 +242,6 @@
     
 }
 
-
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
     //削除した時に、追加可能になってしまう
@@ -264,8 +258,6 @@
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
-
-    
 }
 
 - (BOOL)tableView:(UITableView*)tableView canMoveRowAtIndexPath:(NSIndexPath*)indexPath 
@@ -473,10 +465,11 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.masterTableView endUpdates];
-    //メモの変更を通知センターに反映
+#warning sendmemo
+    
+     //メモの変更を通知センターに反映
     id appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate setMemoToNotificationCenter];
-
 }
 
 
@@ -497,38 +490,6 @@
 - (void)settingViewControllerDidFinish:(SettingViewController *)controller
 {
     [self dismissModalViewControllerAnimated:YES];
-}
-
-#pragma mark AdMaker
-- (void)setAdMaker
-{
-    AdMaker = [[AdMakerView alloc] init];
-    [AdMaker setAdMakerDelegate:self];
-    [AdMaker setFrame:CGRectMake(0, 366, 320, 50)]; //(0, 366, 320, 50)
-    [AdMaker start];
-    
-}
-
--(UIViewController*)currentViewControllerForAdMakerView:(AdMakerView*)view 
-{
-    return self;
-}
-
--(NSArray*)adKeyForAdMakerView:(AdMakerView*)view 
-{
-    return [NSArray arrayWithObjects:kURLForAdMaker,kSiteIDForAdMaker,kSiteIDForAdMaker,nil]; 
-}
-
-//広告の取得に成功
-- (void)didLoadAdMakerView:(AdMakerView*)view 
-{
-    [self.view addSubview:AdMaker.view];
-}
-
-//広告の取得に失敗
-- (void) didFailedLoadAdMakerView:(AdMakerView*)view 
-{
-    
 }
 
 #pragma mark - ShowStartGuide
